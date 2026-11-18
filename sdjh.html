@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國中二段大補帖成語應用填空線上測驗</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .pulse-subtle {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen text-slate-800 font-sans flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-indigo-100">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="app.goHome()">
+                <!-- Team Logo -->
+                <div class="w-10 h-10 rounded-xl overflow-hidden shadow-md shadow-indigo-200 bg-slate-900 flex items-center justify-center flex-shrink-0 border border-indigo-300">
+                    <img src="Logo原形-removebg-preview.png" alt="BRIANSPARK Logo" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/1e1b4b/6366f1?text=B'">
+                </div>
+                <div>
+                    <h1 class="font-black text-base md:text-lg bg-gradient-to-r from-indigo-700 to-purple-700 bg-clip-text text-transparent">二段大補帖成語線上測驗</h1>
+                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                        <span>BRIANSPARK</span>
+                        <a href="https://instagram.com/brianspark67" target="_blank" class="text-indigo-600 hover:underline font-medium flex items-center gap-1">
+                            <i class="fa-brands fa-instagram"></i> brianspark67
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="app.openGlossary()" class="px-3 py-1.5 text-sm font-medium bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition border border-indigo-200 flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-book-open"></i> <span class="hidden sm:inline">成語題庫總覽</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-3xl w-full mx-auto px-4 py-6 md:py-10 flex-grow flex flex-col justify-center">
+
+        <!-- 1. Welcome Screen -->
+        <div id="screen-welcome" class="bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-indigo-100 p-6 md:p-10 animate-fade-in">
+            <div class="text-center max-w-xl mx-auto">
+                <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-3xl mx-auto flex items-center justify-center text-3xl shadow-lg shadow-indigo-200 mb-6 transform hover:rotate-6 transition duration-300">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3">挑戰你的成語情境應用能力！</h2>
+                <p class="text-slate-600 text-sm md:text-base leading-relaxed mb-8">
+                    本測驗改編自國中二段大補帖成語整理（含海市蜃樓、魚遊釜中、得魚忘筌、束手無策、宵衣旰食等精選成語）。透過生動情境題，測試你對成語含意與使用時機的掌握度！
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-left">
+                    <div class="bg-indigo-50/60 p-4 rounded-2xl border border-indigo-100">
+                        <div class="text-indigo-600 font-bold mb-1"><i class="fa-solid fa-circle-question mr-1.5"></i> 題型豐富</div>
+                        <p class="text-xs text-slate-600">情境空格填空，考驗真正理解而非死背。</p>
+                    </div>
+                    <div class="bg-purple-50/60 p-4 rounded-2xl border border-purple-100">
+                        <div class="text-purple-600 font-bold mb-1"><i class="fa-solid fa-bolt mr-1.5"></i> 即時回饋</div>
+                        <p class="text-xs text-slate-600">答題後立即顯示正解與白話釋義。</p>
+                    </div>
+                    <div class="bg-pink-50/60 p-4 rounded-2xl border border-pink-100">
+                        <div class="text-pink-600 font-bold mb-1"><i class="fa-solid fa-chart-line mr-1.5"></i> 錯題檢討</div>
+                        <p class="text-xs text-slate-600">測驗結束自動產生檢討清單與總結。</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="app.startQuiz(10)" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 transition duration-300 transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> 開始精選 10 題測驗
+                    </button>
+                    <button onclick="app.startQuiz('all')" class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-indigo-700 font-bold rounded-2xl border-2 border-indigo-200 transition duration-300 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list-check"></i> 挑戰全部題庫 (全景)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Quiz Screen -->
+        <div id="screen-quiz" class="hidden">
+            <!-- Top Progress Bar & Info -->
+            <div class="bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-indigo-100 mb-6 flex flex-col gap-3">
+                <div class="flex justify-between items-center text-sm font-semibold text-slate-600">
+                    <span id="quiz-progress-text" class="text-indigo-600">題目 1 / 10</span>
+                    <div class="flex items-center gap-3">
+                        <span id="quiz-score-badge" class="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full text-xs font-bold">目前得分: 0</span>
+                        <span id="quiz-timer" class="text-slate-500 text-xs"><i class="fa-regular fa-clock mr-1"></i> <span id="timer-val">00:00</span></span>
+                    </div>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="quiz-progress-bar" class="bg-gradient-to-r from-indigo-600 to-purple-600 h-full w-0 transition-all duration-300 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-indigo-100 p-6 md:p-8 animate-fade-in">
+                <div class="inline-block bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full mb-4">
+                    情境應用題
+                </div>
+                <h3 id="question-scenario" class="text-lg md:text-xl font-bold text-slate-900 leading-relaxed mb-6">
+                    <!-- Scenario inserted via JS -->
+                </h3>
+
+                <!-- Options Grid -->
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                    <!-- Options inserted via JS -->
+                </div>
+
+                <!-- Explanation Box (Hidden until answered) -->
+                <div id="explanation-box" class="hidden bg-indigo-50/80 border border-indigo-200 rounded-2xl p-4 mb-6 animate-fade-in">
+                    <div class="flex items-center gap-2 font-bold text-indigo-900 mb-1" id="feedback-title">
+                        <!-- Correct/Incorrect Icon and Title -->
+                    </div>
+                    <p id="explanation-text" class="text-sm text-slate-700 leading-relaxed mb-2">
+                        <!-- Definition inserted via JS -->
+                    </p>
+                    <div id="idiom-detail-extra" class="text-xs text-indigo-600 font-medium">
+                        <!-- Extra notes like phonetic symbol or source -->
+                    </div>
+                </div>
+
+                <!-- Next Button Container -->
+                <div class="flex justify-end">
+                    <button id="btn-next" onclick="app.nextQuestion()" class="hidden px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2">
+                        下一題 <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Result Screen -->
+        <div id="screen-result" class="hidden bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-indigo-100 p-6 md:p-10 animate-fade-in">
+            <div class="text-center max-w-lg mx-auto">
+                <div id="result-icon-wrapper" class="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl mb-6">
+                    <!-- Icon inserted via JS -->
+                </div>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2" id="result-title">測驗完成！</h2>
+                <p class="text-slate-600 text-sm mb-6" id="result-subtitle">太棒了，你已完成本次成語挑戰。</p>
+
+                <!-- Score Board Card -->
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100 mb-8 flex justify-around items-center">
+                    <div>
+                        <div class="text-xs text-slate-500 font-medium mb-1">最終得分</div>
+                        <div class="text-3xl md:text-4xl font-black text-indigo-700" id="final-score">85</div>
+                    </div>
+                    <div class="h-10 w-px bg-indigo-200"></div>
+                    <div>
+                        <div class="text-xs text-slate-500 font-medium mb-1">答對題數</div>
+                        <div class="text-3xl md:text-4xl font-black text-purple-700" id="final-correct-count">8 / 10</div>
+                    </div>
+                    <div class="h-10 w-px bg-indigo-200"></div>
+                    <div>
+                        <div class="text-xs text-slate-500 font-medium mb-1">正確率</div>
+                        <div class="text-3xl md:text-4xl font-black text-emerald-600" id="final-accuracy">80%</div>
+                    </div>
+                </div>
+
+                <!-- Wrong Questions Review Section -->
+                <div id="wrong-review-section" class="mb-8 text-left hidden">
+                    <h3 class="font-bold text-slate-800 text-base mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> 需要加強的錯題複習
+                    </h3>
+                    <div id="wrong-list-container" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                        <!-- Wrong items inserted via JS -->
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="app.restartQuiz()" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> 重新測驗
+                    </button>
+                    <button onclick="app.goHome()" class="px-6 py-3 bg-white hover:bg-slate-50 text-indigo-700 font-bold rounded-xl border border-indigo-200 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-house"><span>返回首頁</span></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs text-slate-500 border-t border-indigo-100 bg-white/40 mt-10 space-y-1">
+        <p class="font-medium text-indigo-700 bg-indigo-50/80 inline-block px-3 py-1 rounded-full border border-indigo-200 mb-1">
+            <i class="fa-solid fa-circle-info mr-1"></i> 僅供練習，有問題歡迎反應，但以實際老師上課為主
+        </p>
+        <p>國中二段大補帖成語整理・BRIANSPARK (IG: brianspark67) 互動測驗平台 &copy; 2026</p>
+    </footer>
+
+    <!-- Glossary Modal -->
+    <div id="glossary-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-indigo-100 animate-fade-in">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-indigo-50/50 rounded-t-3xl">
+                <div class="flex items-center gap-2.5">
+                    <div class="bg-indigo-600 text-white p-2 rounded-xl">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-900">二段大補帖・成語總覽辭典</h3>
+                        <p class="text-xs text-slate-500">點擊可查看詳細釋義與注音</p>
+                    </div>
+                </div>
+                <button onclick="app.closeGlossary()" class="w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4" id="glossary-list-container">
+                <!-- Glossary items inserted via JS -->
+            </div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50 rounded-b-3xl flex justify-end">
+                <button onclick="app.closeGlossary()" class="px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition">
+                    關閉辭典
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // Full Question Bank derived from the user's uploaded image ("二段大補帖成語整理")
+        const idiomDatabase = [
+            {
+                word: "海市蜃樓",
+                phonetic: "ㄏㄞˇ ㄕˋ ㄕㄣˋ ㄌㄡˊ",
+                definition: "光線折射造成的自然現象。後用以比喻虛幻的事物。",
+                scenario: "科技泡沫化後，許多看似前途無限的新創公司紛紛倒閉，投資人才驚覺當初的高額獲利預期只不過是______罷了。"
+            },
+            {
+                word: "滄海遺珠",
+                phonetic: "ㄘㄤ ㄏㄞˇ ㄧˊ ㄓㄨ",
+                definition: "比喻被埋沒的人才或被人忽視的珍貴事物。",
+                scenario: "這位才華洋溢的素人畫家直到舉辦了首次個人畫展，才被藝壇發掘，免於成為______的遺憾。"
+            },
+            {
+                word: "魚遊釜中",
+                phonetic: "ㄩˊ ㄧㄡˊ ㄈㄨˇ ㄓㄨㄥ",
+                definition: "比喻身處險境，危在旦夕。",
+                scenario: "敵軍大舉壓境，城內糧絕援絕，守軍猶如______，情勢萬分危急。"
+            },
+            {
+                word: "得魚忘筌",
+                phonetic: "ㄉㄜˊ ㄩˊ ㄨㄤˋ ㄑㄩㄢˊ",
+                definition: "比喻人在達到目的成功後就忘掉賴以成功的手段或憑藉物。",
+                scenario: "他靠著恩師的極力推薦順利考取公職，沒想到上任後卻對恩師愛理不理，這種______的行徑讓人心寒。"
+            },
+            {
+                word: "臨淵羨魚",
+                phonetic: "ㄌㄧㄣˊ ㄩㄢ ㄒㄧㄢˋ ㄩˊ",
+                definition: "比喻雖有欲望，卻沒有實際行動。",
+                scenario: "與其每天怨嘆自己無法出國深造，不如現在開始認真準備外語檢定，否則光是______也於事無補。"
+            },
+            {
+                word: "池魚之殃",
+                phonetic: "ㄔˊ ㄩˊ ㄓ ㄧㄤ",
+                definition: "比喻無辜卻受牽累而遭禍。",
+                scenario: "兩家鄰居在樓梯口大打出手，警方到場處理時，路過勸架的王伯伯也被波及受傷，直呼自己真是遭受______。"
+            },
+            {
+                word: "過江之鯽",
+                phonetic: "ㄍㄨㄛˋ ㄐㄧㄤ ㄓ ㄐㄧˋ",
+                definition: "比喻來往的人眾多，或追求時髦流行的人很多。",
+                scenario: "每到週末假日，信義商圈逛街的人潮有如______，各家餐廳門口都大排長龍。"
+            },
+            {
+                word: "一馬平川",
+                phonetic: "ㄧ ㄇㄚˇ ㄆㄧㄥˊ ㄔㄨㄢˊ",
+                definition: "可讓馬兒奔馳的平原。比喻地勢平坦。",
+                scenario: "車子駛出山區後，眼前頓時出現一片______的大草原，讓人心曠神怡。"
+            },
+            {
+                word: "千巖萬壑",
+                phonetic: "ㄑㄧㄢ ㄧㄢˊ ㄨㄢˋ ㄏㄜˋ",
+                definition: "形容高山深谷交疊成群。",
+                scenario: "飛機飛越中央山脈上空時，俯瞰下方______的壯麗景觀，大自然的鬼斧神工令人讚嘆。"
+            },
+            {
+                word: "洞天福地",
+                phonetic: "ㄉㄨㄥˋ ㄊㄧㄢ ㄈㄨˊ ㄉㄧˋ",
+                definition: "即指神仙居住或修道的地方。亦形容環境極為優美舒適的名山勝境。",
+                scenario: "這座隱密山谷中的度假村被翠綠森林環繞，鳥語花香，簡直是都市人嚮往的______。"
+            },
+            {
+                word: "錦繡山河",
+                phonetic: "ㄐㄧㄣˇ ㄒㄧㄡˋ ㄕㄢ ㄏㄜˊ",
+                definition: "美好壯麗的國土。",
+                scenario: "先烈們拋頭顱灑熱血，才為我們保衛了這片______，我們更應該好好珍惜。"
+            },
+            {
+                word: "峰迴路轉",
+                phonetic: "ㄈㄥ ㄏㄨㄟˊ ㄌㄨˋ ㄓㄨㄢˇ",
+                definition: "形容山路隨著山峰而曲折迴轉。比喻事情有了轉機。",
+                scenario: "正當研究團隊陷入絕境、打算放棄實驗時，其中一位組員無意間發現的新數據讓案情______，露出了曙光。"
+            },
+            {
+                word: "人贓俱獲",
+                phonetic: "ㄖㄣˊ ㄗㄤ ㄐㄩˋ ㄏㄨㄛˋ",
+                definition: "嫌犯與不正當取得的財物同時被捕獲。",
+                scenario: "小偷潛入銀樓行竊正準備逃跑時，被趕到的員警當場______，鐵證如山無法狡辯。"
+            },
+            {
+                word: "與時俱進",
+                phonetic: "ㄩㄩˇ ㄕˊ ㄐㄩˋ ㄐㄧㄣˋ",
+                definition: "與時代一同前進。",
+                scenario: "面對快速變遷的AI時代，企業經營必須______，不斷調整商業模式才能在競爭中立於不敗之地。"
+            },
+            {
+                word: "聲色俱厲",
+                phonetic: "ㄕㄥ ㄙㄜˋ ㄐㄩˋ ㄌㄧˋ",
+                definition: "說話時的聲音和臉色都很嚴厲。",
+                scenario: "教官站在台前，______地訓斥那些帶頭違規霸凌的同學，全場鴉雀無聲。"
+            },
+            {
+                word: "碧草如茵",
+                phonetic: "ㄅㄧˋ ㄘㄠˇ ㄖㄨ ㄧㄣ",
+                definition: "形容碧綠的草地，像鋪上地毯一樣濃密柔軟。",
+                scenario: "春天的陽明山公園處處花團錦簇，草地上更是______，吸引許多家庭來野餐。"
+            },
+            {
+                word: "萬紫千紅",
+                phonetic: "ㄨㄢˋ ㄗˇ ㄑㄧㄢ ㄏㄨㄥˊ",
+                definition: "形容百花盛開，色彩絢麗的景象。",
+                scenario: "春暖花開的季節裡，花園裡百花齊放，呈現出一派______的美麗風光。"
+            },
+            {
+                word: "危如累卵",
+                phonetic: "ㄨㄟˊ ㄖㄨˊ ㄌㄟˋ ㄌㄨㄢˇ",
+                definition: "比喻情況非常危險。",
+                scenario: "公司內部財務嚴重虧損，加上負債累累，目前的營運狀況簡直______，隨時可能倒閉。"
+            },
+            {
+                word: "餐風露宿",
+                phonetic: "ㄘㄢ ㄈㄥ ㄌㄨˋ ㄙㄨˋ",
+                definition: "形容野外生活或行旅的艱苦。",
+                scenario: "登山隊員在暴風雪中跋涉了三天三夜，一路______，終於成功登頂。"
+            },
+            {
+                word: "束手無策",
+                phonetic: "ㄕㄨˋ ㄕㄡˇ ㄨˊ ㄘㄜˋ",
+                definition: "比喻面對問題時，毫無解決的辦法。",
+                scenario: "電腦遭到新型勒索病毒攻擊，公司的防毒軟體全部失效，工程師們面對螢幕紛紛______。"
+            },
+            {
+                word: "燃眉之急",
+                phonetic: "ㄖㄢˊ ㄇㄟˊ ㄓ ㄐㄧˊ",
+                definition: "形容事態嚴重，情況危急。",
+                scenario: "家裡突然發生急難，這筆醫療費用是目前的______，大家正設法籌措經費。"
+            },
+            {
+                word: "玩日愒歲",
+                phonetic: "ㄨㄢˊ ㄖˋ ㄎㄞˋ ㄙㄨㄟˋ",
+                definition: "貪圖安逸，虛度光陰。",
+                scenario: "學生時代應該把握時光認真學習，千萬不要天天沈迷手遊、______，將來後悔莫及。"
+            },
+            {
+                word: "紙醉金迷",
+                phonetic: "ㄓˇ ㄗㄨㄟˋ ㄐㄧㄣ ㄇㄧˊ",
+                definition: "比喻奢侈浮華的享樂生活。",
+                scenario: "他自從繼承龐大遺產後，便沈溺於夜夜笙歌、______的奢華生活，不到幾年就把家產敗光了。"
+            },
+            {
+                word: "浮瓜沉李",
+                phonetic: "ㄈㄨˊ ㄍㄨㄚ ㄔㄣˊ ㄌㄧˇ",
+                definition: "比喻夏日消暑的樂事。也作「沉李浮瓜」。",
+                scenario: "炎炎夏日裡，家人坐在清涼的溪水旁品嚐冰鎮的西瓜，享受著______的愜意時光。"
+            },
+            {
+                word: "宵衣旰食",
+                phonetic: "ㄒㄧㄠ ㄧ ㄍㄢˋ ㄕˊ",
+                definition: "天天未明就披衣起床，日暮才進食。形容勤於政事。",
+                scenario: "古代賢君為了國家百姓日夜操勞，往往______，令人肅然起敬。"
+            },
+            {
+                word: "夙興夜寐",
+                phonetic: "ㄙㄨˋ ㄒㄧㄥ ㄧㄝˋ ㄇㄟˋ",
+                definition: "早起晚睡。形容終日勤勞。",
+                scenario: "父母為了扶養我們長大成人，多年來______、辛勤工作，我們一定要心存感恩。"
+            },
+            {
+                word: "含辛茹苦",
+                phonetic: "ㄏㄢˊ ㄒㄧㄣ ㄖㄨˊ ㄎㄨˇ",
+                definition: "形容受盡各種辛苦。",
+                scenario: "母親獨自一人______將三名子女撫養成人，如今大家都有了好成就，母親終於能安享晚年。"
+            }
+        ];
+
+        class IdiomQuizApp {
+            constructor() {
+                this.questions = [];
+                this.currentIndex = 0;
+                this.score = 0;
+                this.correctCount = 0;
+                this.wrongList = [];
+                this.selectedOptionIndex = null;
+                this.isAnswered = false;
+                this.timerInterval = null;
+                this.secondsElapsed = 0;
+            }
+
+            init() {
+                this.renderGlossary();
+            }
+
+            goHome() {
+                this.stopTimer();
+                document.getElementById('screen-welcome').classList.remove('hidden');
+                document.getElementById('screen-quiz').classList.add('hidden');
+                document.getElementById('screen-result').classList.add('hidden');
+            }
+
+            startQuiz(count) {
+                // Shuffle database
+                let shuffled = [...idiomDatabase].sort(() => 0.5 - Math.random());
+                let totalQ = count === 'all' ? shuffled.length : Math.min(count, shuffled.length);
+                
+                this.questions = shuffled.slice(0, totalQ).map(item => {
+                    // Generate 3 random wrong options
+                    let otherOptions = idiomDatabase.filter(i => i.word !== item.word);
+                    let shuffledOthers = otherOptions.sort(() => 0.5 - Math.random()).slice(0, 3);
+                    let options = [...shuffledOthers.map(o => o.word), item.word].sort(() => 0.5 - Math.random());
+                    
+                    return {
+                        ...item,
+                        options: options,
+                        correctAnswer: item.word
+                    };
+                });
+
+                this.currentIndex = 0;
+                this.score = 0;
+                this.correctCount = 0;
+                this.wrongList = [];
+                this.secondsElapsed = 0;
+
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-result').classList.add('hidden');
+                document.getElementById('screen-quiz').classList.remove('hidden');
+
+                this.startTimer();
+                this.loadQuestion();
+            }
+
+            startTimer() {
+                this.stopTimer();
+                this.timerInterval = setInterval(() => {
+                    this.secondsElapsed++;
+                    let m = Math.floor(this.secondsElapsed / 60).toString().padStart(2, '0');
+                    let s = (this.secondsElapsed % 60).toString().padStart(2, '0');
+                    document.getElementById('timer-val').innerText = `${m}:${s}`;
+                }, 1000);
+            }
+
+            stopTimer() {
+                if (this.timerInterval) clearInterval(this.timerInterval);
+            }
+
+            loadQuestion() {
+                this.isAnswered = false;
+                this.selectedOptionIndex = null;
+                
+                const q = this.questions[this.currentIndex];
+                const total = this.questions.length;
+
+                // Update progress header
+                document.getElementById('quiz-progress-text').innerText = `題目 ${this.currentIndex + 1} / ${total}`;
+                document.getElementById('quiz-score-badge').innerText = `目前得分: ${this.score}`;
+                const percent = ((this.currentIndex) / total) * 100;
+                document.getElementById('quiz-progress-bar').style.width = `${percent}%`;
+
+                // Scenario text with placeholder highlighted
+                document.getElementById('question-scenario').innerHTML = q.scenario.replace('______', '<span class="inline-block px-3 py-0.5 mx-1 bg-indigo-100 text-indigo-700 rounded-lg font-black border border-indigo-300">（　　）</span>');
+
+                // Render Options
+                const optionsContainer = document.getElementById('options-container');
+                optionsContainer.innerHTML = '';
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-2xl border-2 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/40 transition font-medium text-slate-800 flex items-center justify-between group shadow-sm bg-white";
+                    btn.innerHTML = `
+                        <span class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-xl bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-xs group-hover:bg-indigo-600 group-hover:text-white transition">${['A', 'B', 'C', 'D'][idx]}</span>
+                            <span class="text-base">${opt}</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-600 transition text-sm"></i>
+                    `;
+                    btn.onclick = () => this.selectAnswer(idx, opt);
+                    optionsContainer.appendChild(btn);
+                });
+
+                // Hide explanation and next button
+                document.getElementById('explanation-box').classList.add('hidden');
+                document.getElementById('btn-next').classList.add('hidden');
+            }
+
+            selectAnswer(idx, selectedOpt) {
+                if (this.isAnswered) return;
+                this.isAnswered = true;
+
+                const q = this.questions[this.currentIndex];
+                const isCorrect = (selectedOpt === q.correctAnswer);
+
+                if (isCorrect) {
+                    this.score += Math.round(100 / this.questions.length);
+                    this.correctCount++;
+                } else {
+                    this.wrongList.push({
+                        scenario: q.scenario,
+                        correctAnswer: q.correctAnswer,
+                        userAnswer: selectedOpt,
+                        definition: q.definition,
+                        phonetic: q.phonetic
+                    });
+                }
+
+                // Update score badge
+                document.getElementById('quiz-score-badge').innerText = `目前得分: ${this.score}`;
+
+                // Style option buttons
+                const buttons = document.getElementById('options-container').children;
+                for (let i = 0; i < buttons.length; i++) {
+                    const b = buttons[i];
+                    b.disabled = true;
+                    const optText = b.querySelector('span span:nth-child(2)').innerText;
+                    
+                    if (optText === q.correctAnswer) {
+                        b.className = "w-full text-left p-4 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold flex items-center justify-between shadow-sm";
+                        b.querySelector('span span:first-child').className = "w-7 h-7 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center text-xs";
+                        b.querySelector('i').className = "fa-solid fa-check text-emerald-600";
+                    } else if (optText === selectedOpt && !isCorrect) {
+                        b.className = "w-full text-left p-4 rounded-2xl border-2 border-rose-500 bg-rose-50 text-rose-900 font-medium flex items-center justify-between shadow-sm";
+                        b.querySelector('span span:first-child').className = "w-7 h-7 rounded-xl bg-rose-600 text-white font-bold flex items-center justify-center text-xs";
+                        b.querySelector('i').className = "fa-solid fa-xmark text-rose-600";
+                    } else {
+                        b.className = "w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 opacity-60 text-slate-500 flex items-center justify-between shadow-sm";
+                    }
+                }
+
+                // Show Explanation Box
+                const expBox = document.getElementById('explanation-box');
+                expBox.classList.remove('hidden');
+                
+                const feedbackTitle = document.getElementById('feedback-title');
+                if (isCorrect) {
+                    feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i> <span class="text-emerald-700">答對了！太棒囉！</span>`;
+                    expBox.className = "bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4 mb-6 animate-fade-in";
+                } else {
+                    feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 text-lg"><span>答錯囉！正確答案是：<strong class="text-rose-700">${q.correctAnswer}</strong></span>`;
+                    expBox.className = "bg-rose-50/80 border border-rose-200 rounded-2xl p-4 mb-6 animate-fade-in";
+                }
+
+                document.getElementById('explanation-text').innerHTML = `<strong>成語釋義：</strong>${q.definition}`;
+                document.getElementById('idiom-detail-extra').innerHTML = `<i class="fa-solid fa-volume-high mr-1"></i> 注音：${q.phonetic}`;
+
+                // Show Next Button
+                const btnNext = document.getElementById('btn-next');
+                btnNext.classList.remove('hidden');
+                if (this.currentIndex === this.questions.length - 1) {
+                    btnNext.innerHTML = `查看測驗結果 <i class="fa-solid fa-flag-checkered ml-1"></i>`;
+                } else {
+                    btnNext.innerHTML = `下一題 <i class="fa-solid fa-arrow-right ml-1"></i>`;
+                }
+            }
+
+            nextQuestion() {
+                this.currentIndex++;
+                if (this.currentIndex < this.questions.length) {
+                    this.loadQuestion();
+                } else {
+                    this.finishQuiz();
+                }
+            }
+
+            finishQuiz() {
+                this.stopTimer();
+                document.getElementById('screen-quiz').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+
+                const total = this.questions.length;
+                const accuracy = Math.round((this.correctCount / total) * 100);
+
+                document.getElementById('final-score').innerText = this.score;
+                document.getElementById('final-correct-count').innerText = `${this.correctCount} / ${total}`;
+                document.getElementById('final-accuracy').innerText = `${accuracy}%`;
+
+                // Result icon and message
+                const iconWrapper = document.getElementById('result-icon-wrapper');
+                const titleEl = document.getElementById('result-title');
+                const subtitleEl = document.getElementById('result-subtitle');
+
+                if (accuracy >= 90) {
+                    iconWrapper.className = "w-24 h-24 rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl mb-6 bg-gradient-to-tr from-amber-400 to-orange-500 text-white";
+                    iconWrapper.innerHTML = `<i class="fa-solid fa-trophy"></i>`;
+                    titleEl.innerText = "太厲害了！成語達人！";
+                    subtitleEl.innerText = "你對二段大補帖的成語掌握得爐火純青，完美過關！";
+                } else if (accuracy >= 60) {
+                    iconWrapper.className = "w-24 h-24 rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl mb-6 bg-gradient-to-tr from-indigo-500 to-purple-600 text-white";
+                    iconWrapper.innerHTML = `<i class="fa-solid fa-award"></i>`;
+                    titleEl.innerText = "表現優異！通過測驗！";
+                    subtitleEl.innerText = "基礎相當扎實，再複習一下錯題就能更上一層樓！";
+                } else {
+                    iconWrapper.className = "w-24 h-24 rounded-full mx-auto flex items-center justify-center text-4xl shadow-xl mb-6 bg-gradient-to-tr from-rose-500 to-pink-600 text-white";
+                    iconWrapper.innerHTML = `<i class="fa-solid fa-book-bookmark"></i>`;
+                    titleEl.innerText = "革命尚未成功，加油！";
+                    subtitleEl.innerText = "建議多利用成語總覽辭典加強複習，重新挑戰一次吧！";
+                }
+
+                // Wrong review list
+                const wrongSection = document.getElementById('wrong-review-section');
+                const wrongListContainer = document.getElementById('wrong-list-container');
+                wrongListContainer.innerHTML = '';
+
+                if (this.wrongList.length > 0) {
+                    wrongSection.classList.remove('hidden');
+                    this.wrongList.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = "bg-rose-50/60 border border-rose-200 rounded-2xl p-4 text-sm";
+                        div.innerHTML = `
+                            <div class="font-bold text-rose-900 mb-1 flex items-center gap-2">
+                                <span class="bg-rose-600 text-white text-xs px-2 py-0.5 rounded-md">正確解：${item.correctAnswer}</span>
+                                <span class="text-xs text-rose-700 font-normal">（你的回答：${item.userAnswer}）</span>
+                            </div>
+                            <p class="text-slate-700 text-xs mb-1">${item.scenario}</p>
+                            <p class="text-slate-500 text-xs"><strong>釋義：</strong>${item.definition}</p>
+                        `;
+                        wrongListContainer.appendChild(div);
+                    });
+                } else {
+                    wrongSection.classList.add('hidden');
+                }
+            }
+
+            restartQuiz() {
+                this.startQuiz(this.questions.length);
+            }
+
+            openGlossary() {
+                document.getElementById('glossary-modal').classList.remove('hidden');
+            }
+
+            closeGlossary() {
+                document.getElementById('glossary-modal').classList.add('hidden');
+            }
+
+            renderGlossary() {
+                const container = document.getElementById('glossary-list-container');
+                container.innerHTML = '';
+                idiomDatabase.forEach((item, idx) => {
+                    const div = document.createElement('div');
+                    div.className = "bg-slate-50 hover:bg-indigo-50/50 border border-slate-200 hover:border-indigo-300 rounded-2xl p-4 transition";
+                    div.innerHTML = `
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-indigo-900 text-base">${idx + 1}. ${item.word}</span>
+                            <span class="text-xs text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-lg font-mono">${item.phonetic}</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2"><strong>釋義：</strong>${item.definition}</p>
+                        <p class="text-xs text-slate-500 italic bg-white p-2 rounded-xl border border-slate-100"><strong>情境範例：</strong>${item.scenario}</p>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+        }
+
+        const app = new IdiomQuizApp();
+        window.onload = () => {
+            app.init();
+        };
+    </script>
+</body>
+</html>
